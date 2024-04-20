@@ -97,8 +97,8 @@ def get_comment_info(video_ids):
                             Video_Id=item['snippet']['topLevelComment']['snippet']['videoId'],
                             Comment_Text=item['snippet']['topLevelComment']['snippet']['textDisplay'],
                             Comment_Author=item['snippet']['topLevelComment']['snippet']['authorDisplayName'],
-                            Comment_Published=item['snippet']['topLevelComment']['snippet']['publishedAt'])
-                    
+                            Comment_Published=item['snippet']['topLevelComment']['snippet']['publishedAt'],
+                            Channel_id = item['snippet']['channelId'])
                     Comment_data.append(data)
                     # next_page_token=response.get('nextPageToken')
 
@@ -183,8 +183,7 @@ def Create_table_sql():
     cursor.execute(create_query2)
     mydb.commit()
 
-    ### If channel not created 
-    Create_table_sql()
+   
 
     # 3. create comment table 
 
@@ -192,10 +191,12 @@ def Create_table_sql():
                                     Video_Id varchar(50),
                                     Comment_Text text,
                                     Comment_Author varchar(100),
-                                    Comment_Published timestamp)'''
+                                    Comment_Published timestamp,Channel_Id varchar(100))
+                                    '''
     cursor.execute(create_query3)
     mydb.commit()
-
+    ### If channel not created 
+    # Create_table_sql()
 def data_to_mongodb(channel_id):
     
         ch_details=get_channel_info(channel_id)
@@ -302,8 +303,8 @@ def insert_channels_sql(channel_id):
                                                 Video_Id,
                                                 Comment_Text,
                                                 Comment_Author,
-                                                Comment_Published)
-                                                values(%s,%s,%s,%s,%s)'''
+                                                Comment_Published,Channel_Id)
+                                                values(%s,%s,%s,%s,%s,%s)'''
                 for row in new3:
                         values = tuple((row.values()))
                         cursor.execute(insert_query,values)
@@ -374,10 +375,12 @@ if button_clicked:
         collection1=db["channel_details"]
         
         if collection1.find_one({'channel_information.Channel_Id': channel_id }):
-                st.write (":red[channel id exists in MongoDB !!! please try other channel id]")
+                collection1.delete_one({'channel_information.Channel_Id': channel_id})
+                data_to_mongodb(channel_id)  
+                st.write (":red[your channel id information updated in MongoDB !!! ]")
         else:
               data_to_mongodb(channel_id)  
-              st.write(":green[Scrape and Update Data to MongoDB Successfully]")
+              st.write(":green[Scrape and Update Data to MongoDB Successfully!!!]")
 #### All channel Datas in MongoDB
 st.subheader(":violet[View All Channel Details Exists in MongoDB]")
 all_channel_button = st.button("Channels In MongoDB")
@@ -436,7 +439,19 @@ channel_ids = [row[0] for row in rows]
 button_sql = st.button("Store in SQL")
 if button_sql:
     if  ip_channel in channel_ids:
-        st.write(":red[channel exists in SQL]")
+        delete_query = "DELETE FROM channels WHERE channel_id = %s"
+        cursor.execute(delete_query, (ip_channel,))
+        
+        delete_query2 = "DELETE FROM comments WHERE channel_id = %s"
+        cursor.execute(delete_query, (ip_channel,))
+
+        delete_query3 = "DELETE FROM videos WHERE channel_id = %s"
+        cursor.execute(delete_query, (ip_channel,))
+        
+        
+        mydb.commit()
+        insert_channels_sql(ip_channel)
+        st.write(":red[Your channel details updated in SQL]")
     else:
         insert_channels_sql(ip_channel)
         st.write(":green[Data Migrated to SQL Successfully]")
