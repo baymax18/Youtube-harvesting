@@ -9,12 +9,12 @@ import isodate
 
 
 # youtube api key
-api_key = 'AIzaSyAbHP8AeiUORQVJnbNLjudX_Y5w18pHZk4'
+api_key = '#api key'
 
 # api calling
 youtube = googleapiclient.discovery.build("youtube", 'v3', developerKey = api_key)
 # MongoDb Connect
-client = pymongo.MongoClient("mongodb+srv://Vishnu:admin@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+client = pymongo.MongoClient("mongodb+srv://Vishnu:password@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['youtube_data']
 
 def get_channel_info(channel_id):
@@ -146,7 +146,7 @@ def get_video_info(video_ids):
 
 ## table insertion to mysql
 def Create_table_sql():
-    mydb=psycopg2.connect(host="localhost",user="postgres",password="admin",dbname="youtube_data",port="5432")
+    mydb=psycopg2.connect(host="localhost",user="postgres",password="Password",dbname="youtube_data",port="5432")
     cursor=mydb.cursor()
 
     # 1. create Channel table 
@@ -205,7 +205,7 @@ def data_to_mongodb(channel_id):
         vi_details=get_video_info(vi_ids)
         com_details=get_comment_info(vi_ids)
         print("Scrape Data Successfully")
-        client = pymongo.MongoClient("mongodb+srv://Vishnu:admin@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+        client = pymongo.MongoClient("mongodb+srv://Vishnu:Password@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
         db = client['youtube_data']
         db
         collection1=db["channel_details"]
@@ -218,7 +218,7 @@ def data_to_mongodb(channel_id):
 #### All channel in Mongo DB
 def channels_mongo():
 
-    client = pymongo.MongoClient("mongodb+srv://Vishnu:admin@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+    client = pymongo.MongoClient("mongodb+srv://Vishnu:Password@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
     db = client['youtube_data']
     col = db['channel_details']
     channels_mongo = []
@@ -230,9 +230,9 @@ def channels_mongo():
 
 
 def insert_channels_sql(channel_id):
-        mydb=psycopg2.connect(host="localhost",user="postgres",password="admin",dbname="youtube_data",port="5432")
+        mydb=psycopg2.connect(host="localhost",user="postgres",password="Password",dbname="youtube_data",port="5432")
         cursor=mydb.cursor()
-        client = pymongo.MongoClient("mongodb+srv://Vishnu:admin@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+        client = pymongo.MongoClient("mongodb+srv://Vishnu:Password@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
         db = client['youtube_data']
         col = db['channel_details']
         
@@ -313,7 +313,7 @@ def insert_channels_sql(channel_id):
                 print ("Channel Data Migrate to SQL Successfully")
 
 
-client = pymongo.MongoClient("mongodb+srv://Vishnu:admin@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+client = pymongo.MongoClient("mongodb+srv://Vishnu:Password@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['youtube_data']
 col = db['channel_details']
 
@@ -370,7 +370,7 @@ if channel_id:
 
 button_clicked = st.button("Scrape & Store in MongoDB")
 if button_clicked:
-        client = pymongo.MongoClient("mongodb+srv://Vishnu:admin@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+        client = pymongo.MongoClient("mongodb+srv://Vishnu:Password@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
         db = client['youtube_data']
         collection1=db["channel_details"]
         
@@ -418,7 +418,7 @@ st.subheader(":violet[Data Migration to SQL]")
 
 
 
-client = pymongo.MongoClient("mongodb+srv://Vishnu:admin@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+client = pymongo.MongoClient("mongodb+srv://Vishnu:Password@cluster0.8onkuv9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['youtube_data']
 col = db['channel_details']
 channels_mongo = []
@@ -430,7 +430,7 @@ new_channel_id = col.find_one({'channel_information.Channel_Name': unique_channe
 ip_channel = new_channel_id['channel_information']['Channel_Id']
 
 
-mydb=psycopg2.connect(host="localhost",user="postgres",password="admin",dbname="youtube_data",port="5432")
+mydb=psycopg2.connect(host="localhost",user="postgres",password="Password",dbname="youtube_data",port="5432")
 cursor=mydb.cursor()
 cursor.execute('''select Channel_Id from channels''')
 rows = cursor.fetchall()
@@ -471,7 +471,7 @@ question=st.selectbox("Select your question",('Choose Your Question for Analysis
                                 '9. What is the average duration of all videos in each channel, and what are their corresponding channel names?',
                                 '10. Which videos have the highest number of comments, and what are their corresponding channel names?'))
 
-mydb=psycopg2.connect(host="localhost",user="postgres",password="admin",dbname="youtube_data",port="5432")
+mydb=psycopg2.connect(host="localhost",user="postgres",password="Password",dbname="youtube_data",port="5432")
 cursor=mydb.cursor()
 
 if question=="1. What are the names of all the videos and their corresponding channels?":
